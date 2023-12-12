@@ -19,6 +19,8 @@ contract ContinuumVault {
     address public constant wethAddress =
         0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6;
 
+    // each token stores the weight of the token in the TTC and the address
+    // for exmaple, Token(50, wethAddress);
     struct Token {
         uint weight;
         address tokenAddress;
@@ -94,6 +96,9 @@ contract ContinuumVault {
         return swapRouter.exactInputSingle(params);
     }
 
+    // should make a function to get onchain data and be able to use the top 10 tokens
+
+    // a rebalance function that check the current top 10 token by mcap and rebalance accordingly.
     function mint() public payable {
         require(msg.value >= 0.01 ether, "Minimum amount to mint is 0.01 ETH");
 
