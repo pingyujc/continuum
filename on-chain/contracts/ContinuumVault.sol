@@ -1,3 +1,5 @@
+//SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.20;
 
 import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
@@ -7,7 +9,9 @@ import "./TTC.sol";
 
 contract ContinuumVault {
     TTC public ttcToken;
+    address public owner;
 
+    // what is this address?
     address payable public constant continuumTreasury =
         payable(0x5a0A32D09A3d31C1cB264a38ECF03ff53fAcE222);
     uint8 public constant continuumFee = 1;
@@ -45,6 +49,7 @@ contract ContinuumVault {
 
     // this is what the TTC is consisted of, currently just 3 coins and static weight.
     constructor() {
+        owner = msg.sender;
         ttcToken = new TTC(address(this));
         // WETH
         topTenTokens[0] = Token(50, wethAddress);
@@ -96,7 +101,29 @@ contract ContinuumVault {
         return swapRouter.exactInputSingle(params);
     }
 
-    // should make a function to get onchain data and be able to use the top 10 tokens
+    // a modifier to make sure only onwer can call some functions
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not the owner");
+        _; // Continue with the function execution if the modifier check passes
+    }
+
+    // // this function will make the new toptenToken array
+    // function makeNewTopTenToken(
+    //     Token[10] memory newTopTenTokens
+    // ) external onlyOwner {}
+
+    // this function should update the currenct TTC weight to new TTC weight
+    function updateTopTenTokens(
+        Token[10] memory newTopTenTokens
+    ) external onlyOwner {
+        // Perform any necessary validation on the new token list
+        // ...
+
+        // Update the top ten tokens
+        for (uint i = 0; i < newTopTenTokens.length; i++) {
+            topTenTokens[i] = newTopTenTokens[i];
+        }
+    }
 
     // a rebalance function that check the current top 10 token by mcap and rebalance accordingly.
     function mint() public payable {

@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 
 async function main() {
-    // setting up the initial owner address
+    // setting up the initial owner address, current using my test dev mm
     const initialOwnerAddress = "0x2AAA3F617D1C10A9f85293e8dD8A866C09053E99";
     const TTC = await ethers.deployContract("TTC", [initialOwnerAddress], {});
 

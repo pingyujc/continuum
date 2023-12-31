@@ -1,5 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
+require("@nomicfoundation/hardhat-verify");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 
@@ -16,6 +17,7 @@ const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY;
 
 module.exports = {
+    defaultNetwork: "hardhat",
     solidity: "0.8.20",
     networks: {
         goerli: {
@@ -27,5 +29,15 @@ module.exports = {
             // ],
             // chainId: 5,
         },
+    },
+    etherscan: {
+        // Your API key for Etherscan
+        // Obtain one at https://etherscan.io/
+        apiKey: ETHERSCAN_API_KEY,
+    },
+    sourcify: {
+        // Disabled by default
+        // Doesn't need an API key
+        enabled: true,
     },
 };

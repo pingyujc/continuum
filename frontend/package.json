@@ -17,6 +17,7 @@
     "@mui/material": "^5.14.17",
     "@mui/x-charts": "^6.18.1",
     "@mui/x-data-grid": "^6.18.1",
+    "@openzeppelin/contracts-upgradeable": "^5.0.1",
     "@walletconnect/web3-provider": "^1.8.0",
     "@web3modal/ethers5": "^3.2.0-alpha.1",
     "antd": "^5.10.2",
