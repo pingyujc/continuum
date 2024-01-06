@@ -1,0 +1,23 @@
+Top 10 Tokens: [
+  { id: 1, symbol: 'BTC', weight: 65.3824509248135 },
+  { id: 1027, symbol: 'ETH', weight: 20.621228393164117 },
+  { id: 1839, symbol: 'BNB', weight: 3.638628816370839 },
+  { id: 5426, symbol: 'SOL', weight: 3.249963859809716 },
+  { id: 52, symbol: 'XRP', weight: 2.356933583266605 },
+  { id: 2010, symbol: 'ADA', weight: 1.4454144999194678 },
+  { id: 5805, symbol: 'AVAX', weight: 1.0080174391320338 },
+  { id: 74, symbol: 'DOGE', weight: 0.8903069458483723 },
+  { id: 6636, symbol: 'DOT', weight: 0.710517192392532 },
+  { id: 1958, symbol: 'TRX', weight: 0.696538345282826 }
+]
+
+BTC
+ETH
+BNB
+SOL
+XRP
+ADA
+AVAX
+DOGE
+DOT
+TRX
