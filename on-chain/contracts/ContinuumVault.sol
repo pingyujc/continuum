@@ -114,14 +114,27 @@ contract ContinuumVault {
 
     // this function should update the currenct TTC weight to new TTC weight
     function updateTopTenTokens(
-        Token[10] memory newTopTenTokens
+        uint[] memory weights,
+        address[] memory addresses
     ) external onlyOwner {
-        // Perform any necessary validation on the new token list
-        // ...
+        // Perform any necessary validation on the input arrays
+        require(
+            weights.length == addresses.length,
+            "Invalid input arrays length"
+        );
 
         // Update the top ten tokens
-        for (uint i = 0; i < newTopTenTokens.length; i++) {
-            topTenTokens[i] = newTopTenTokens[i];
+        // make each pair of weight and address ubti a token and replace the current one
+        for (uint i = 0; i < topTenTokens.length; i++) {
+            if (i < weights.length && i < addresses.length) {
+                topTenTokens[i] = Token({
+                    weight: weights[i],
+                    tokenAddress: addresses[i]
+                });
+            } else {
+                // If there are fewer elements in the input arrays, reset the remaining elements in the topTenTokens array
+                topTenTokens[i] = Token(0, address(0));
+            }
         }
     }
 

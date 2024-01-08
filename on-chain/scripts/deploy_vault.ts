@@ -12,20 +12,9 @@ async function main() {
     await continuumVault.waitForDeployment();
 
     console.log(`ContinuumVault deployed to ${continuumVault.target}`);
-    console.log("now testing some functions...");
 
-    // console.log(network.config);
-
-    const ttcToken = await continuumVault.getTokens();
-    console.log("TTC consists: ");
-    console.log(ttcToken);
     const ttcAddress = await continuumVault.getTtcTokenAddress();
     console.log(`TTC address is: ${ttcAddress}`);
-
-    // const vaultData = await continuumVault.getVaultData();
-    // console.log(vaultData);
-
-    // continuumVault.updateTopTenTokens()
 }
 
 // We recommend this pattern to be able to use async/await everywhere
