@@ -1,11 +1,12 @@
 import axios from "axios";
 import dotenv from "dotenv";
 import path from "path";
+import fs from "fs";
 
 // function definitions:
 
 // this function should fetch the top tokens, sorted by marketcap.
-async function fetchTopTokens(
+export async function fetchTopTokens(
     apiKey: string
 ): Promise<{ id: number; symbol: string; price: number; marketCap: number }[]> {
     try {
@@ -14,7 +15,7 @@ async function fetchTopTokens(
             "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
         const parameters = {
             start: "1",
-            limit: "20", // Adjust the limit based on your needs
+            limit: "25", // Adjust the limit based on your needs
             convert: "USD", // You can change the currency if needed
         };
         // Set up the headers with the CoinMarketCap API key
@@ -43,9 +44,6 @@ async function fetchTopTokens(
             marketCap: Math.round(token.quote.USD.market_cap),
         }));
 
-        // filter out here
-        // console.log("TOP:", topTokens);
-
         return topTokens;
     } catch (error) {
         console.error("Error fetching top tokens:");
@@ -55,12 +53,12 @@ async function fetchTopTokens(
 
 // this should get the top 10, without stable coins
 // this function does not call the API
-async function getTop10(
+export async function getTop10(
     tokenArray: Promise<
         { id: number; symbol: string; price: number; marketCap: number }[]
     >,
     apiKey: string
-): Promise<{ id: number; symbol: string; weight: number }[]> {
+): Promise<{ symbol: string; weight: number; address: string }[]> {
     try {
         // Wait for the promise to resolve
         const tokens = await tokenArray;
@@ -68,6 +66,20 @@ async function getTop10(
         // Filter out stable coins (see if price == 1)
         const filteredTokens = tokens.filter((token) => token.price != 1);
 
+        for (let i = filteredTokens.length - 1; i >= 0; i--) {
+            if (!isTokenInFile(filteredTokens[i].symbol)) {
+                console.log(
+                    `Could not find ERC20 address for token: ${filteredTokens[i].symbol}`
+                );
+                filteredTokens.splice(i, 1);
+            } else {
+                // Assign the address to the specific token at index i
+                const tokenAddress = getAddressForToken(
+                    filteredTokens[i].symbol
+                );
+                filteredTokens[i].address = tokenAddress;
+            }
+        }
         // Take the top 10 tokens based on market cap
         const topTenArray = filteredTokens.slice(0, 10);
 
@@ -79,12 +91,15 @@ async function getTop10(
         }
 
         // Calculate individual weights and build the top10 array
-        const top10: { id: number; symbol: string; weight: number }[] =
-            topTenArray.map((token) => ({
-                id: token.id,
-                symbol: token.symbol,
-                weight: Number((token.marketCap / total_mcap) * 100),
-            }));
+        const top10: {
+            symbol: string;
+            weight: number;
+            address: string;
+        }[] = topTenArray.map((token) => ({
+            symbol: token.symbol,
+            weight: Number((token.marketCap / total_mcap) * 100),
+            address: token.address,
+        }));
 
         console.log("total marketcap: ", total_mcap);
 
@@ -92,6 +107,48 @@ async function getTop10(
     } catch (error) {
         console.error("Error getting top 10 tokens:");
         throw error;
+    }
+}
+
+function isTokenInFile(symbol: string): boolean {
+    // Read the content of the JSON file
+    const fileContent = fs.readFileSync(
+        "./scripts/tokenAddresses.json",
+        "utf-8"
+    );
+
+    try {
+        // Parse the JSON content
+        const data = JSON.parse(fileContent);
+
+        // Check if the symbol exists in the file
+        return data.tokens.some(
+            (token: { symbol: string; address: string | null }) =>
+                token.symbol === symbol && token.address != null
+        );
+    } catch (error) {
+        console.error("Error parsing JSON file:");
+        return false;
+    }
+}
+
+// Function to get the address for a token from the tokenAddresses.json file
+function getAddressForToken(symbol: string): string | null {
+    const fileContent = fs.readFileSync(
+        "./scripts/tokenAddresses.json",
+        "utf-8"
+    );
+
+    try {
+        const data = JSON.parse(fileContent);
+        const token = data.tokens.find(
+            (t: { symbol: string; address: string | null }) =>
+                t.symbol === symbol
+        );
+        return token ? token.address : null;
+    } catch (error) {
+        console.error("Error parsing JSON file:");
+        return null;
     }
 }
 
@@ -137,19 +194,37 @@ dotenv.config({ path: envFilePath });
 // get the api key from ENV file
 const CMC_API_KEY = process.env.CMC_API_KEY;
 
-// Check if the CoinMarketCap API key is defined
-if (!CMC_API_KEY) {
-    console.error("CoinMarketCap API key is not defined.");
-    process.exit(1); // Exit with an error code
+export function getCoinMarketCapAPIKey(): string {
+    // Specify the path to your .env file (env is in the on-chain folder)
+    const envFilePath = path.resolve(__dirname, "../.env");
+
+    // Load environment variables from the specified file
+    dotenv.config({ path: envFilePath });
+
+    // Get the API key from ENV file
+    const CMC_API_KEY = process.env.CMC_API_KEY;
+
+    if (!CMC_API_KEY) {
+        console.error("CoinMarketCap API key is not defined.");
+        process.exit(1); // Exit with an error code
+    }
+
+    return CMC_API_KEY;
 }
 
-const tokenList = fetchTopTokens(CMC_API_KEY);
-getTop10(tokenList, CMC_API_KEY)
-    .then((topTenArray) => {
-        console.log("Top 10 Tokens:", topTenArray);
-    })
-    .catch((error) => {
-        console.error("Error:", error.message);
-    });
+// Check if the CoinMarketCap API key is defined
+// if (!CMC_API_KEY) {
+//     console.error("CoinMarketCap API key is not defined.");
+//     process.exit(1); // Exit with an error code
+// }
+
+// const tokenList = fetchTopTokens(CMC_API_KEY);
+// getTop10(tokenList, CMC_API_KEY)
+//     .then((topTenArray) => {
+//         console.log("Top 10 Tokens:", topTenArray);
+//     })
+//     .catch((error) => {
+//         console.error("Error:", error.message);
+//     });
 
 // fetchMapping(CMC_API_KEY);

@@ -1,0 +1,92 @@
+{
+    "tokens": [
+        {
+            "symbol": "BTC",
+            "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+        },
+        {
+            "symbol": "ETH",
+            "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+        },
+        {
+            "symbol": "BNB",
+            "address": "0xB8c77482e45F1F44dE1745F52C74426C631bDD52"
+        },
+        {
+            "symbol": "SOL",
+            "address": "0xD31a59c85aE9D8edEFeC411D448f90841571b89c"
+        },
+        {
+            "symbol": "XRP",
+            "address": "0x39fBBABf11738317a448031930706cd3e612e1B9"
+        },
+        {
+            "symbol": "ADA",
+            "address": null
+        },
+        {
+            "symbol": "AVAX",
+            "address": "0x85f138bfEE4ef8e540890CFb48F620571d67Eda3"
+        },
+        {
+            "symbol": "DOGE",
+            "address": null
+        },
+        {
+            "symbol": "TRX",
+            "address": null
+        },
+        {
+            "symbol": "DOT",
+            "address": null
+        },
+        {
+            "symbol": "LINK",
+            "address": "0x514910771AF9Ca656af840dff83E8264EcF986CA"
+        },
+        {
+            "symbol": "MATIC",
+            "address": "0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0"
+        },
+        {
+            "symbol": "TON",
+            "address": "0xc4a11aaf6ea915ed7ac194161d2fc9384f15bff2"
+        },
+        {
+            "symbol": "ICP",
+            "address": null
+        },
+        {
+            "symbol": "SHIB",
+            "address": null
+        },
+        {
+            "symbol": "LTC",
+            "address": null
+        },
+        {
+            "symbol": "BCH",
+            "address": null
+        },
+        {
+            "symbol": "LEO",
+            "address": "0x2af5d2ad76741191d15dfe7bf6ac92d4bd912ca3"
+        },
+        {
+            "symbol": "ATOM",
+            "address": null
+        },
+        {
+            "symbol": "UNI",
+            "address": "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
+        },
+        {
+            "symbol": "OP",
+            "address": null
+        },
+        {
+            "symbol": "INJ",
+            "address": null
+        }
+    ]
+}
