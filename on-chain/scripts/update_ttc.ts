@@ -10,6 +10,7 @@ async function main() {
     const [acc1] = await ethers.getSigners();
 
     const CONTRACT_NAME = "ContinuumVault";
+    // the vault address that we are modifying
     const CONTRACT_ADDRESS = "0x07108AC974D719965DF27B321caA33743994F7cb";
 
     const contract = await ethers.getContractAt(
@@ -36,24 +37,27 @@ async function main() {
 
     // send a tx from acc1, calling the `mint` function on the contract
     // with the to address = acc1.address and amount to be minted = 1
-    let weights = [];
-    let addresses = [];
+    let weights = [50, 50];
+    let addresses = [
+        "0x326C977E6efc84E512bB9C30f76E30c160eD06FB",
+        "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+    ];
     let total_weight = 0;
     // setting the weight
     // round to integer, and min is 1
-    for (const token of topTenArray) {
-        const modifiedWeight = Math.max(1, Math.round(token.weight));
-        total_weight += modifiedWeight;
+    // for (const token of topTenArray) {
+    //     const modifiedWeight = Math.max(1, Math.round(token.weight));
+    //     total_weight += modifiedWeight;
 
-        // Directly push the modified weight into the weights array
-        weights.push(modifiedWeight);
-        // weights.push(token.weight);
-        addresses.push(token.address);
-    }
-    // if it went above 100, we take off extra from btc
-    if (total_weight - 100 > 0) {
-        weights[0] -= total_weight - 100;
-    }
+    //     // Directly push the modified weight into the weights array
+    //     weights.push(modifiedWeight);
+    //     // weights.push(token.weight);
+    //     addresses.push(token.address);
+    // }
+    // // if it went above 100, we take off extra from btc
+    // if (total_weight - 100 > 0) {
+    //     weights[0] -= total_weight - 100;
+    // }
 
     // the new weights and addresses in TTC
     console.log("THE NEW WEIGHTS AND TOKEN ADDRESS IN TTC:");
@@ -67,17 +71,17 @@ async function main() {
     //     "0xbA63D4Bb4F5809d77BCc5Af043231b19D4999972",
     // ];
 
-    // const tx = await contract
-    //     .connect(acc1)
-    //     .updateTopTenTokens(weights, addresses);
+    const tx = await contract
+        .connect(acc1)
+        .updateTopTenTokens(weights, addresses);
 
-    // // wait for the tx to be processed, then log the receipt
-    // const receipt = await tx.wait();
-    // console.log("Tx receipt:", receipt);
+    // wait for the tx to be processed, then log the receipt
+    const receipt = await tx.wait();
+    console.log("Tx receipt:", receipt);
 
-    // // check the ttc token again after updating
-    // const new_ttc = await contract.getTokens();
-    // console.log("getToken:", new_ttc);
+    // check the ttc token again after updating
+    const new_ttc = await contract.getTokens();
+    console.log("getToken:", new_ttc);
 }
 
 main().catch((error) => {

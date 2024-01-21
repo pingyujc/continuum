@@ -85,6 +85,20 @@ contract ContinuumVault {
         return data;
     }
 
+    // functions below will cost gas
+
+    // a modifier to make sure only onwer can call some functions
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not the owner");
+        _; // Continue with the function execution if the modifier check passes
+    }
+
+    // Function to transfer ownership of the contract
+    function transferOwnership(address newOwner) external onlyOwner {
+        require(newOwner != address(0), "Invalid new owner address");
+        owner = newOwner;
+    }
+
     function executeSwap(uint amount, uint index) internal returns (uint) {
         ISwapRouter.ExactInputSingleParams memory params = ISwapRouter
             .ExactInputSingleParams({
@@ -99,12 +113,6 @@ contract ContinuumVault {
             });
 
         return swapRouter.exactInputSingle(params);
-    }
-
-    // a modifier to make sure only onwer can call some functions
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Not the owner");
-        _; // Continue with the function execution if the modifier check passes
     }
 
     // // this function will make the new toptenToken array
@@ -138,7 +146,9 @@ contract ContinuumVault {
         }
     }
 
-    // a rebalance function that check the current top 10 token by mcap and rebalance accordingly.
+    // a rebalance function that adjust the funds in the vault to the new holding
+    function updateHolding() external onlyOwner {}
+
     function mint() public payable {
         require(msg.value >= 0.01 ether, "Minimum amount to mint is 0.01 ETH");
 

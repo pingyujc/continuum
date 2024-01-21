@@ -113,7 +113,7 @@ export async function getTop10(
 function isTokenInFile(symbol: string): boolean {
     // Read the content of the JSON file
     const fileContent = fs.readFileSync(
-        "./scripts/tokenAddresses.json",
+        "./scripts/tokenAddresses_ETH.json",
         "utf-8"
     );
 
@@ -135,7 +135,7 @@ function isTokenInFile(symbol: string): boolean {
 // Function to get the address for a token from the tokenAddresses.json file
 function getAddressForToken(symbol: string): string | null {
     const fileContent = fs.readFileSync(
-        "./scripts/tokenAddresses.json",
+        "./scripts/tokenAddresses_ETH.json",
         "utf-8"
     );
 
